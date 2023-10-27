@@ -3,10 +3,47 @@ import "./App.css";
 import axios from "axios";
 import CryptoSummary from "./components/CryptoSummary";
 import { Crypto } from "./types/Crypto";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import type { ChartData, ChartOptions } from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function App() {
   const [cryptos, setCryptos] = useState<Crypto[] | null>();
   const [selected, setSelected] = useState<Crypto | null>();
+const [data, setData] = useState<ChartData<'line'>>();
+const [options, setOptions] = useState<ChartOptions<'line'>>({
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top' as const,
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Line Chart',
+    },
+  },
+})
+
+
 
   useEffect(() => {
     const url =
@@ -24,6 +61,9 @@ function App() {
       onChange={(e)=>{
         const c = cryptos?.find((x)=> x.id === e.target.value);
         setSelected(c)
+        // when we select an option, we will;
+        // request
+        // update data.state
       }}
       defaultValue="default"
     >
@@ -37,6 +77,7 @@ function App() {
     </select>
   </div>
   { selected ? <CryptoSummary crypto={selected} /> : null }
+  {data ? <Line options={options} data={data} /> : null}
   </>
   );
 }
