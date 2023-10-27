@@ -1,7 +1,8 @@
-import { Crypto } from "../App";
+import { Crypto  }  from "../types/Crypto"
+
 
 export type AppProps = {
-    crypto: Crypto
+    crypto: Crypto 
 };
 
 export default function CryptoSummary({crypto}: AppProps): JSX.Element{

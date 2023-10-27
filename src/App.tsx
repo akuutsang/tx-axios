@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
-import { type } from "@testing-library/user-event/dist/type";
+import { CryptoType }  from "./types/CryptoType"
 import CryptoSummary from "./components/CryptoSummary";
 
-export type Crypto = {
-ath: number
-atl: number
-current_price: number;
-id: string
-name: string
-symbol: string
-high_24h: number;
-low_24h: number;
 
-
-}
 
 function App() {
   const [cryptos, setCryptos] = useState<Crypto[] | null>();
