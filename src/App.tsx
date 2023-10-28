@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
+import moment  from "moment";
 import CryptoSummary from "./components/CryptoSummary";
 import { Crypto } from "./types/Crypto";
 import {
@@ -71,7 +72,9 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
           setData(
             {
               labels : response.data.prices.map((price: number[])=>{
-                return price[0]} ) ,
+                return moment(price[0] / 1000).format('MM-DD-yyyy');
+              } 
+              ),
               datasets: [
                 {
                   label: 'Dataset 1',
