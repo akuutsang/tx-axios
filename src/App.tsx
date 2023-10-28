@@ -65,14 +65,14 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
         // when we select an option, we will;
         // request
         axios.get(
-          `https://api.coingecko.com/api/v3/coins/${c?.id}/market_chart?vs_currency=usd&days=30&interval=daily&precision=1`
+          `https://api.coingecko.com/api/v3/coins/${c?.id}/market_chart?vs_currency=usd&days=30&interval=daily`
         )
         .then((response)=>{
           console.log(response.data)
           setData(
             {
               labels : response.data.prices.map((price: number[])=>{
-                return moment(price[0] / 1000).format('MM-DD-yyyy');
+                return moment(price[0] / 1000).format('MM-DD');
               } 
               ),
               datasets: [
