@@ -63,7 +63,28 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
         setSelected(c)
         // when we select an option, we will;
         // request
-        // update data.state
+        axios.get(
+          `https://api.coingecko.com/api/v3/coins/${c?.id}/market_chart?vs_currency=usd&days=30&interval=daily&precision=1`
+        )
+        .then((response)=>{
+          console.log(response.data)
+          setData(
+            {
+              labels : response.data.prices.map((price: number[])=>{
+                return price[0]} ) ,
+              datasets: [
+                {
+                  label: 'Dataset 1',
+                  data: response.data.prices.map((price: number[])=>{
+                    return price[1]} ) ,
+                  borderColor: 'rgb(255, 99, 132)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+              
+              ],
+            })
+        });
+
       }}
       defaultValue="default"
     >
@@ -77,7 +98,7 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
     </select>
   </div>
   { selected ? <CryptoSummary crypto={selected} /> : null }
-  {data ? <Line options={options} data={data} /> : null}
+  {data ? <div style={{width: 600}}><Line options={options} data={data} /></div> : null}
   </>
   );
 }
