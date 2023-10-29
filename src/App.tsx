@@ -36,7 +36,7 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      display: false,
     },
     title: {
       display: true,
@@ -85,11 +85,11 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
             responsive: true,
             plugins: {
               legend: {
-                position: 'top' as const,
+                display: false,
               },
               title: {
                 display: true,
-                text: 'Price Over Last'  +  range  + (range === 1 ? 'Day.' : 'Days.') ,
+                text: `${selected?.name } Price Over Last `  +  range  + (range === 1 ? ' Day.' : ' Days.') ,
               },
             },
           })
