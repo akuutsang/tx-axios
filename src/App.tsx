@@ -30,7 +30,7 @@ ChartJS.register(
 function App() {
 const [cryptos, setCryptos] = useState<Crypto[] | null>();
 const [selected, setSelected] = useState<Crypto | null>();
-const [range, setRange] = useState<string>('30');
+const [range, setRange] = useState<number>(30);
 const [data, setData] = useState<ChartData<'line'>>();
 const [options, setOptions] = useState<ChartOptions<'line'>>({
   responsive: true,
@@ -59,14 +59,14 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
 
   useEffect(()=>{
     axios.get(
-      `https://api.coingecko.com/api/v3/coins/${selected?.id}/market_chart?vs_currency=usd&days=${range}&${range === '1' ? 'interrval=hourly' : 'interval=daily'}`
+      `https://api.coingecko.com/api/v3/coins/${selected?.id}/market_chart?vs_currency=usd&days=${range}&${range === 1 ? 'interrval=hourly' : 'interval=daily'}`
     )
     .then((response)=>{
       console.log(response.data)
       setData(
         {
           labels : response.data.prices.map((price: number[])=>{
-        return moment(price[0] / 1000).format(range === '1' ? "HH:MM" : "MM-DD");
+        return moment(price[0] / 1000).format(range === 1 ? "HH:MM" : "MM-DD");
           } 
           ),
           datasets: [
@@ -80,6 +80,20 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
           
           ],
         })
+        setOptions({
+          
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top' as const,
+              },
+              title: {
+                display: true,
+                text: 'Price Over Last'  +  range  + (range === 1 ? 'Day.' : 'Days.') ,
+              },
+            },
+          })
+        
     });
 
   }, [selected, range]);
@@ -105,12 +119,12 @@ const [options, setOptions] = useState<ChartOptions<'line'>>({
 
     </select>
     <select onChange={(e)=>{
-           setRange(e.target.value)
+           setRange(parseInt(e.target.value))
 
     }}>
-      <option value='30'>30days</option>
-      <option value='7'>7days</option>
-      <option value='1'>1 day</option>
+      <option value={30}>30days</option>
+      <option value={7}>7days</option>
+      <option value={1}>day</option>
     </select>
 
   </div>
