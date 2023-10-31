@@ -3,23 +3,18 @@ import "./App.css";
 import axios from "axios";
 import CryptoSummary from "./components/CryptoSummary";
 import { Crypto } from "./types/Crypto";
+import { Pie } from 'react-chartjs-2';
+import type { ChartData } from 'chart.js';
+
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
   Tooltip,
+  ArcElement,
   Legend,
 } from 'chart.js';
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  ArcElement,
   Tooltip,
   Legend
 );
@@ -27,6 +22,7 @@ ChartJS.register(
 function App() {
 const [cryptos, setCryptos] = useState<Crypto[] | null>();
 const [selected, setSelected] = useState<Crypto []>([]);
+const [data, setData] = useState<ChartData<'pie'>>();
 
   useEffect(() => {
     const url =
@@ -38,7 +34,33 @@ const [selected, setSelected] = useState<Crypto []>([]);
 
   useEffect(() => {
 console.log("SELECTED",selected)
-  }, [selected])
+if (selected.length === 0) return
+  setData({
+    labels: selected.map((d)=>d.name),
+
+    datasets: [
+      {
+        label: '# of Votes',
+        data:selected.map((d)=> d.owned),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ]}) }, [selected])
 
   function updateOwned(crypto:Crypto, amount:number){
     console.log("updateowned", crypto, amount);
@@ -67,14 +89,13 @@ console.log("SELECTED",selected)
           })
         : null}
               <option value="default">Choose an option</option>
-
     </select>
-
   </div>
   
    {selected.map((s)=>{
    return <CryptoSummary crypto={s} updateOwned={updateOwned}/>
  })}
+ {data ? <div style={{width: 600}}><Pie  data={data} /></div> : null};
 {selected? "Your portfolio is worth $" + selected.map((s)=>{
   if (isNaN(s.owned)) {
     return 0
@@ -84,7 +105,7 @@ return s.current_price * s.owned;
 }).reduce((previous, current)=>{
   return previous + current;
 
-}, 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : null}
+}, 0).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) : null};
 </>
   );
 }
